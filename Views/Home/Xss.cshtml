@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "Cross-Site Scripting (XSS)";
+    var userInput = Context.Request.Query["input"];
+}
+
+<h3>Cross-Site Scripting (XSS) Demo</h3>
+<p>Entrez du texte ci-dessous et voyez comment il s'affiche :</p>
+
+<form method="get">
+    <input type="text" name="input" class="form-control" placeholder="Tapez quelque chose..." value="@userInput" />
+    <button type="submit" class="btn btn-primary mt-2">Afficher</button>
+</form>
+
+@if (!string.IsNullOrEmpty(userInput))
+{
+    <div class="alert alert-info mt-3">
+        <strong>Résultat :</strong>
+        @Html.Raw(userInput) <!-- Vulnérable à XSS -->
+    </div>
+}
