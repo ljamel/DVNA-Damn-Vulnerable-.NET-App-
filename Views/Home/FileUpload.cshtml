@@ -1,0 +1,77 @@
+@{
+    ViewData["Title"] = "Accueil - DVNA";
+}
+<style>
+    .grid { display:flex; gap:12px; flex-wrap:wrap; }
+    .card { border:1px solid #ddd; padding:8px; border-radius:6px; width:200px; }
+    img { max-width:100%; height:auto; display:block; margin-bottom:6px; }
+    small.warn { color: #8a1; }
+</style>
+  <h1>Upload d'image</h1>
+
+  <section>
+    <form id="uploadForm" method="post" enctype="multipart/form-data" action="/upload">
+      <div>
+        <label>Fichier : <input type="file" name="file" accept="image/*" required /></label>
+      </div>
+      <div>
+        <label>Nom de l'image : <input type="text" name="filename" placeholder="ex: monimage.jpg" /></label>
+      </div>
+      <div style="margin-top:8px;">
+        <button type="submit">Uploader</button>
+      </div>
+    </form>
+    <div id="result" style="margin-top:10px;color:green"></div>
+  </section>
+
+  <hr/>
+
+  <section>
+    <h2>Galerie</h2>
+    <div id="gallery" class="grid"></div>
+  </section>
+
+  <script>
+    async function loadList(){
+      const res = await fetch('/list');
+      if (!res.ok) { document.getElementById('gallery').innerText = 'Erreur au chargement'; return; }
+      const files = await res.json();
+      const g = document.getElementById('gallery');
+      g.innerHTML = '';
+      for (const f of files) {
+        const card = document.createElement('div'); card.className = 'card';
+        const img = document.createElement('img');
+        img.src = '/view?name=' + encodeURIComponent(f);
+        img.alt = f;
+        const p = document.createElement('div');
+        p.innerHTML = `<div><strong>${f}</strong></div><div><a href="/view?name=${encodeURIComponent(f)}" target="_blank">ouvrir</a></div>`;
+        card.appendChild(img);
+        card.appendChild(p);
+        g.appendChild(card);
+      }
+    }
+
+    // handle upload result
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = new FormData(form);
+      const res = await fetch(form.action, { method: 'POST', body: data });
+      const out = document.getElementById('result');
+      if (!res.ok) {
+        const text = await res.text();
+        out.style.color = 'red';
+        out.innerText = 'Erreur: ' + text;
+        return;
+      }
+      const j = await res.json();
+      out.style.color = 'green';
+      out.innerText = 'Upload OK — ' + j.savedAs;
+      form.reset();
+      loadList();
+    });
+
+    // initial load
+    loadList();
+  </script>
+

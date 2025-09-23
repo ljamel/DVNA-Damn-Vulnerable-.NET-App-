@@ -8,9 +8,15 @@ namespace DVNA.Controllers
         {
             return View();
         }
-        
+
         [Route("Xss")]
         public IActionResult Xss()
+        {
+            return View();
+        }
+        
+        [Route("FileUpload")]
+        public IActionResult FileUpload()
         {
             return View();
         }

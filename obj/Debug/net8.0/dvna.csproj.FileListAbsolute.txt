@@ -45,3 +45,4 @@
 /home/lamri/Desktop/outils/c sharpe project/dvna/obj/Debug/net8.0/dvna.pdb
 /home/lamri/Desktop/outils/c sharpe project/dvna/obj/Debug/net8.0/dvna.genruntimeconfig.cache
 /home/lamri/Desktop/outils/c sharpe project/dvna/obj/Debug/net8.0/ref/dvna.dll
+/home/lamri/Desktop/outils/c sharpe project/dvna/obj/Debug/net8.0/dvna.sourcelink.json
