@@ -1,0 +1,41 @@
+@{
+    ViewData["Title"] = "Login (SQLi Lab)";
+}
+
+<h2>Login (démonstration SQLi)</h2>
+
+<form method="post" asp-action="Login" action="/SqlInjection">
+    <label>Username</label><br />
+    <input type="text" name="username" style="width:300px" /><br /><br />
+
+    <label>Password</label><br />
+    <input type="text" name="password" style="width:300px" /><br /><br />
+
+    <button type="submit">Se connecter (vulnérable)</button>
+</form>
+
+<hr />
+
+<form method="post" asp-action="LoginSecure" action="/LoginSecure">
+    <label>Username</label><br />
+    <input type="text" name="username" value="" /><br />
+    <label>Password</label><br />
+    <input type="text" name="password" value="" />
+    <p>Ou tester la <strong>version sécurisée</strong> : saisissez les mêmes champs ci-dessus puis cliquez ici :</p>
+    <button type="submit">Se connecter (sécurisé)</button>
+</form>
+
+@if (ViewBag.Message != null)
+{
+    <h3>Résultat vulnérable :</h3>
+    <pre>@ViewBag.Message</pre>
+
+    <h4>Requête exécutée :</h4>
+    <pre>@ViewBag.Query</pre>
+}
+
+@if (ViewBag.SecureMessage != null)
+{
+    <h3>Résultat sécurisé :</h3>
+    <pre>@ViewBag.SecureMessage</pre>
+}

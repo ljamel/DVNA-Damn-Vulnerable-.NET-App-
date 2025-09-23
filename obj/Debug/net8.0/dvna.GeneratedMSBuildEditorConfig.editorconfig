@@ -18,12 +18,24 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = /home/lamri/Desktop/outils/c sharpe project/dvna
 build_property._RazorSourceGeneratorDebug = 
 
+[/home/lamri/Desktop/outils/c sharpe project/dvna/Views/Home/Auth.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9BdXRoLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [/home/lamri/Desktop/outils/c sharpe project/dvna/Views/Home/FileUpload.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9GaWxlVXBsb2FkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [/home/lamri/Desktop/outils/c sharpe project/dvna/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/lamri/Desktop/outils/c sharpe project/dvna/Views/Home/Injectcommande.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmplY3Rjb21tYW5kZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/home/lamri/Desktop/outils/c sharpe project/dvna/Views/Home/SqlInjection.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9TcWxJbmplY3Rpb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [/home/lamri/Desktop/outils/c sharpe project/dvna/Views/Home/Xss.cshtml]

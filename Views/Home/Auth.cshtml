@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Login (Auth faible Lab)";
+}
+
+<h2>Login (Auth faible. essayer de vous connecter en tant que user)</h2>
+
+<form method="post" action="SqlInjection">
+    <label>Username</label><br />
+    <input type="text" name="username" style="width:300px" /><br /><br />
+
+    <label>Password</label><br />
+    <input type="text" name="password" style="width:300px" /><br /><br />
+
+    <button type="submit">Se connecter (vulnérable)</button>
+</form>
+
+<hr />
+
+@if (ViewBag.Message != null)
+{
+    <h3>Résultat vulnérable :</h3>
+    <pre>@ViewBag.Message</pre>
+
+    <h4>Requête exécutée :</h4>
+    <pre>@ViewBag.Query</pre>
+}
+

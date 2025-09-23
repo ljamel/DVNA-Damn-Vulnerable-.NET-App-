@@ -1,0 +1,17 @@
+@{
+    ViewData["Title"] = "Injection de Commande";
+}
+
+<h2>Test d'Injection de Commande</h2>
+
+<form method="post">
+    <label for="host">Adresse IP ou nom d'hôte :</label><br />
+    <input type="text" id="host" name="host" placeholder="ex: 8.8.8.8" style="width:300px" />
+    <button type="submit">Ping</button>
+</form>
+
+@if (ViewBag.Output != null)
+{
+    <h3>Résultat :</h3>
+    <pre>@ViewBag.Output</pre>
+}
