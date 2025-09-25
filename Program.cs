@@ -4,13 +4,48 @@
 // Date : 2025
 // Description : Application web ASP.NET Core volontairement vulnérable pour l’apprentissage de la sécurité
 // ================================
-// ajout du plugin sqlite dotnet add package Microsoft.EntityFrameworkCore.Sqlite avant dotnet run
+// ajout du plugin sqlite dotnet add package Microsoft.EntityFrameworkCore.Sqlite && dotnet add package Microsoft.AspNetCore.Authentication.JwtBearer avant dotnet run
 
 using Microsoft.AspNetCore.StaticFiles;
 using dvna.Data;
 using Microsoft.EntityFrameworkCore;
+using dvna.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using dvna.Models;
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+var jwtKey = "super-secret-key-12345gsecret-key-12345jnhhyyfdTYYU5"; // TODO: remplacer en production
+var issuer = "MyAPI";
+var audience = "MyAPIUsers"; 
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = issuer,
+        ValidAudience = audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+    };
+});
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddControllersWithViews();
 
@@ -143,8 +178,83 @@ app.MapGet("/list", () =>
 	return Results.Json(files);
 });
 
+app.Use(async (context, next) =>
+{
+    var token = context.Request.Cookies["jwt"];
+    if (!string.IsNullOrEmpty(token))
+    {
+        context.Request.Headers["Authorization"] = $"Bearer {token}";
+    }
+
+    await next();
+});
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapPost("/api/login", async (UserLogin user, AppDbContext db, HttpResponse response) =>
+{
+    var dbUser = await db.Users.SingleOrDefaultAsync(u => u.Username == user.Username);
+
+    if (dbUser is null || dbUser.Password != user.Password)
+    {
+        return Results.Unauthorized();
+    }
+
+    // 1. Définir les claims
+    var claims = new[]
+    {
+        new Claim(ClaimTypes.Name, dbUser.Username),
+        new Claim(ClaimTypes.Role, "User") // Adaptable selon besoin
+    };
+
+    // 2. Clé de signature
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+    // 3. Créer le token JWT
+    var token = new JwtSecurityToken(
+        issuer: issuer,
+        audience: audience,
+        claims: claims,
+        expires: DateTime.UtcNow.AddMinutes(30),
+        signingCredentials: creds);
+
+    // 4. Convertir en string
+    var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+    // 5. Stocker dans un cookie si tu veux (optionnel)
+    response.Cookies.Append("jwt", tokenString, new CookieOptions
+    {
+        HttpOnly = true,
+        Secure = false, // ⚠️ mettre true en production avec HTTPS
+        SameSite = SameSiteMode.Strict,
+        Expires = DateTimeOffset.UtcNow.AddMinutes(30)
+    });
+
+    // 6. Retourner le token
+    return Results.Ok(new { token = tokenString });
+});
+
+
+app.MapGet("/api", async (AppDbContext db) =>
+{
+	return await db.Users.ToListAsync();
+})
+.RequireAuthorization();
+
+app.MapGet("/api/{id}", async (int id, AppDbContext db) =>
+{
+	var person = await db.Users.FindAsync(id);
+	return person is not null ? Results.Ok(person) : Results.NotFound();
+})
+.RequireAuthorization();
+
 
 Seed.Init(app);
+
+app.UseDeveloperExceptionPage();
+
 
 app.Run();
 
