@@ -10,11 +10,11 @@
         "projectUniqueName": "/home/lamri/Desktop/outils/c sharpe project/dvna/dvna.csproj",
         "projectName": "dvna",
         "projectPath": "/home/lamri/Desktop/outils/c sharpe project/dvna/dvna.csproj",
-        "packagesPath": "/root/.nuget/packages/",
+        "packagesPath": "/home/lamri/.nuget/packages/",
         "outputPath": "/home/lamri/Desktop/outils/c sharpe project/dvna/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/root/.nuget/NuGet/NuGet.Config"
+          "/home/lamri/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"

@@ -72,8 +72,6 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
-
 app.MapControllerRoute(
 	name: "xss",
 	pattern: "Xss",
@@ -201,11 +199,10 @@ app.MapPost("/api/login", async (UserLogin user, AppDbContext db, HttpResponse r
         return Results.Unauthorized();
     }
 
-    // 1. Définir les claims
     var claims = new[]
     {
         new Claim(ClaimTypes.Name, dbUser.Username),
-        new Claim(ClaimTypes.Role, "User") // Adaptable selon besoin
+        new Claim(ClaimTypes.Role, "User") 
     };
 
     // 2. Clé de signature
@@ -220,24 +217,26 @@ app.MapPost("/api/login", async (UserLogin user, AppDbContext db, HttpResponse r
         expires: DateTime.UtcNow.AddMinutes(30),
         signingCredentials: creds);
 
-    // 4. Convertir en string
     var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
-    // 5. Stocker dans un cookie si tu veux (optionnel)
     response.Cookies.Append("jwt", tokenString, new CookieOptions
     {
         HttpOnly = true,
-        Secure = false, // ⚠️ mettre true en production avec HTTPS
+        Secure = false,
         SameSite = SameSiteMode.Strict,
         Expires = DateTimeOffset.UtcNow.AddMinutes(30)
     });
 
-    // 6. Retourner le token
     return Results.Ok(new { token = tokenString });
 });
 
 
 app.MapGet("/api", async (AppDbContext db) =>
+{
+	return "Se connecter via curl (POST /api/login) avec l’utilisateur user, puis appeler GET /api/list pour récupérer la liste des utilisateurs et trouver le mot de passe de l’admin.";
+});
+
+app.MapGet("/api/list", async (AppDbContext db) =>
 {
 	return await db.Users.ToListAsync();
 })
@@ -257,4 +256,6 @@ app.UseDeveloperExceptionPage();
 
 
 app.Run();
+
+// PS Je sais que je doit mettre les actions dans le controller, je referait un refactorine dès que possible..
 
