@@ -1,6 +1,7 @@
 # DVNA
 
 DVNA est un projet C# conçu pour apprendre le pentest et tester la sécurité des applications.
+À exécuter uniquement dans une VM isolée ou un conteneur Docker sans persistance de données.
 
 ## Fonctionnalités
 
