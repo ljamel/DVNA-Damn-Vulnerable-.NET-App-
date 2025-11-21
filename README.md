@@ -19,7 +19,7 @@ DVNA est un projet C# conçu pour apprendre le pentest et tester la sécurité d
 ## Installation
 
 ```bash
-git clone https://github.com/votre-utilisateur/dvna.git
+git clone https://github.com/ljamel/DVNA-Damn-Vulnerable-.NET-App-.git
 cd dvna
 dotnet restore
 ```
