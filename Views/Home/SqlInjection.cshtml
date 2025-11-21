@@ -5,6 +5,7 @@
 <h2>Login (démonstration SQLi)</h2>
 
 <form method="post" asp-action="Login" action="/SqlInjection">
+    @Html.AntiForgeryToken()
     <label>Username</label><br />
     <input type="text" name="username" style="width:300px" /><br /><br />
 
@@ -17,6 +18,7 @@
 <hr />
 
 <form method="post" asp-action="LoginSecure" action="/LoginSecure">
+    @Html.AntiForgeryToken()
     <label>Username</label><br />
     <input type="text" name="username" value="" /><br />
     <label>Password</label><br />

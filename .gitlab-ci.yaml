@@ -1,0 +1,38 @@
+stages:
+  - restore
+  - build
+  - test
+  - security
+variables:
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "true"
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: "true"
+restore:
+  stage: restore
+  image: mcr.microsoft.com/dotnet/sdk:7.0
+  script:
+    - dotnet restore
+  artifacts:
+    paths:
+      - .nuget/packages/
+build:
+  stage: build
+  image: mcr.microsoft.com/dotnet/sdk:7.0
+  script:
+    - dotnet build --configuration Release
+  artifacts:
+    paths:
+      - bin/
+      - obj/
+test:
+  stage: test
+  image: mcr.microsoft.com/dotnet/sdk:7.0
+  script:
+    - dotnet test --no-build --verbosity normal
+security_scan:
+  stage: security
+  image: mcr.microsoft.com/dotnet/sdk:7.0
+  script:
+    # Le build exécute automatiquement les analyzers Puma.Security.Rules
+    - dotnet build --configuration Release
+  allow_failure: false
